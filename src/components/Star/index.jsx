@@ -14,9 +14,9 @@ const Star = ({ rate }) => {
         }
 
         return arrStar.map((item, index) => {
-            if (item === 1) return <AiFillStar></AiFillStar>;
-            else if (item === 0.5) return <BsStarHalf></BsStarHalf>;
-            else return <AiOutlineStar></AiOutlineStar>;
+            if (item === 1) return <AiFillStar key={`star-${index}`}></AiFillStar>;
+            else if (item === 0.5) return <BsStarHalf key={`star-${index}`}></BsStarHalf>;
+            else return <AiOutlineStar key={`star-${index}`}></AiOutlineStar>;
         });
     };
 

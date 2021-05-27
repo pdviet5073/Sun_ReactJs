@@ -4,6 +4,9 @@
     left: 25rem;
     width: calc(100% - 25rem);
 }
+.list-product {
+    min-height: 48rem;
+}
 .list-sort {
     display: flex;
     justify-content: space-between;

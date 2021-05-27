@@ -7,8 +7,11 @@
     padding: 2rem;
     overflow-y: auto;
 }
-li:hover {
+.sidebar li:hover {
     color: #b32500;
+}
+.sidebar li {
+    cursor: pointer;
 }
 .clear-filter {
     padding: 0.5rem 2rem;
@@ -29,6 +32,9 @@ h3.categories-title {
     color: #888;
     padding-bottom: 1rem;
 }
+.sidebar-active {
+    color: #b32500;
+}
 .categories-dropdown {
     padding-left: 1rem;
     height: 0;
@@ -48,6 +54,11 @@ h3.categories-title {
     top: 0;
     left: 0;
     font-size: 1.2rem;
+}
+.sort h3 {
+    padding-top: 2rem;
+    margin-top: 2rem;
+    border-top: 1px solid #ccc;
 }
 .sort-item {
     display: flex;
@@ -76,4 +87,8 @@ h3.categories-title {
 .price-range input {
     border: 1px solid #ccc;
     width: 7rem;
+}
+
+.rate-active .star {
+    color: #b32500;
 }

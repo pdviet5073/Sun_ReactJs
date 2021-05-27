@@ -1,4 +1,9 @@
 .product-item {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+
+    height: calc(100% - 3rem);
     padding: 1rem;
     margin-bottom: 3rem;
     border: 1px solid #ccc;

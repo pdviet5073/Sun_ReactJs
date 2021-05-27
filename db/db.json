@@ -178,8 +178,8 @@
             "price": 10,
             "parentType": 1,
             "childrenType": 1,
-            "type": 1,
-            "brand": 1,
+            "type": [1, 2],
+            "brand": [1, 3],
             "rate": 4,
             "img": "https://cdn-demo.algolia.com/bestbuy-0118/1313531168_sb.jpg"
         },
@@ -222,7 +222,7 @@
             "price": 210,
             "parentType": 1,
             "childrenType": 2,
-            "type": 3,
+            "type": [1, 3],
             "brand": 1,
             "rate": 2,
             "img": "https://cdn-demo.algolia.com/bestbuy-0118/5768586_sb.jpg"
@@ -244,7 +244,7 @@
             "price": 5,
             "parentType": 1,
             "childrenType": 2,
-            "type": 3,
+            "type": [3, 2],
             "brand": 2,
             "rate": 1000,
             "img": "https://cdn-demo.algolia.com/bestbuy-0118/8390036_sb.jpg"
@@ -277,7 +277,7 @@
             "price": 19,
             "parentType": 1,
             "childrenType": 2,
-            "type": 3,
+            "type": [3, 4, 5],
             "brand": 2,
             "rate": 6,
             "img": "https://cdn-demo.algolia.com/bestbuy-0118/1308183846_sb.jpg"
@@ -398,7 +398,7 @@
             "price": 1,
             "parentType": 2,
             "childrenType": 1,
-            "type": 1,
+            "type": [1, 2, 3, 4],
             "brand": 4,
             "rate": 4,
             "img": "https://cdn-demo.algolia.com/bestbuy-0118/8579341_sb.jpg"
@@ -409,7 +409,7 @@
             "price": 449.99,
             "parentType": 2,
             "childrenType": 2,
-            "type": 2,
+            "type": [2, 4],
             "brand": 4,
             "rate": 4,
             "img": "https://cdn-demo.algolia.com/bestbuy-0118/9784375_sb.jpg"
@@ -431,7 +431,7 @@
             "price": 287.99,
             "parentType": 2,
             "childrenType": 2,
-            "type": 2,
+            "type": [1, 2, 5],
             "brand": 4,
             "rate": 4,
             "img": "https://cdn-demo.algolia.com/bestbuy-0118/9784375_sb.jpg"
@@ -596,7 +596,7 @@
             "price": 9.99,
             "parentType": 2,
             "childrenType": 3,
-            "type": 3,
+            "type": [4, 5],
             "brand": 5,
             "rate": 3,
             "img": "https://cdn-demo.algolia.com/bestbuy-0118/5050200_sb.jpg"
