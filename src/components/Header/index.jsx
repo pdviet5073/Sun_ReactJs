@@ -1,10 +1,14 @@
 import React, { useRef, useState } from "react";
+
+import { connect } from "react-redux";
+import { setSearchKey, setCurrentPage } from "../../redux/actions";
+
 import logo from "../../assets/images/logo.png";
 import { BiSearchAlt2 } from "react-icons/bi";
 
 import "./styles.css";
 
-const Header = ({ setSearchKey }) => {
+const Header = ({ setSearchKey, setCurrentPage }) => {
     const [value, setValue] = useState("");
     const typingTimeoutRef = useRef(null);
 
@@ -12,13 +16,12 @@ const Header = ({ setSearchKey }) => {
         const valueInput = e.target.value;
         setValue(valueInput);
 
-        if (value) {
-            clearTimeout(typingTimeoutRef.current);
+        clearTimeout(typingTimeoutRef.current);
 
-            typingTimeoutRef.current = setTimeout(() => {
-                setSearchKey(valueInput);
-            }, 800);
-        }
+        typingTimeoutRef.current = setTimeout(() => {
+            setSearchKey(valueInput);
+            setCurrentPage(1);
+        }, 800);
     };
 
     return (
@@ -33,10 +36,11 @@ const Header = ({ setSearchKey }) => {
                     </a>
                     <div className="header-search">
                         <input
+                            type="text"
                             className="header-input"
                             placeholder="Search a product"
                             value={value}
-                            onChange={getSearchKey}
+                            onChange={(e) => getSearchKey(e)}
                         />
                         <button className="btn ">
                             <BiSearchAlt2 />
@@ -48,4 +52,11 @@ const Header = ({ setSearchKey }) => {
     );
 };
 
-export default Header;
+const dispatchStateToProps = (dispatch) => {
+    return {
+        setSearchKey: (params) => dispatch(setSearchKey(params)),
+        setCurrentPage: (params) => dispatch(setCurrentPage(params)),
+    };
+};
+
+export default connect(null, dispatchStateToProps)(Header);

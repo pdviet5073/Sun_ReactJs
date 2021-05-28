@@ -1,9 +1,21 @@
 import React, { useState } from "react";
+import { connect } from "react-redux";
 
 import Star from "../../Star";
 
 import { AiOutlineClear } from "react-icons/ai";
 import { BiSearchAlt2 } from "react-icons/bi";
+
+import {
+    setBrand,
+    setType,
+    setRate,
+    setRangePrice,
+    setCategories,
+    setCurrentPage,
+    setSortPrice,
+    setSearchKey,
+} from "../../../redux/actions";
 
 import "./styles.css";
 
@@ -71,26 +83,24 @@ const rangePriceData = [
 ];
 
 const Sidebar = ({
+    setSearchKey,
     setRangePrice,
     setBrand,
     setType,
     setRate,
     setCategories,
-    rangePrice,
+    setCurrentPage,
     brand,
     type,
-    rate,
     categories,
-    setSortPrice,
-    setCurrentPage,
 }) => {
     const [isActive, setIsActive] = useState({});
-    console.log("file: index.jsx > line 88 > isActive", isActive);
     const [isFilter, setIsFilter] = useState(false);
     const [isChecked, setIsChecked] = useState({});
 
     const handelCategoriesClick = (id) => {
         setIsFilter(true);
+        setCurrentPage(1);
         setCategories({
             idParentCategories: id,
         });
@@ -101,7 +111,7 @@ const Sidebar = ({
         const valueCheckbox = (state, setState) => {
             const index = state.findIndex((itemId) => itemId === value);
             if (index === -1) {
-                setState(() => [...state, value]);
+                setState([...state, value]);
             } else {
                 const newState = state;
                 newState.splice(index, 1);
@@ -164,6 +174,7 @@ const Sidebar = ({
     };
 
     const handelClearFilter = () => {
+        setSearchKey("");
         setRangePrice([]);
         setBrand([]);
         setType([]);
@@ -228,12 +239,11 @@ const Sidebar = ({
                         id={item.name}
                         value={item.id}
                         onChange={(e) => handelTypeBrandClick(e, typeClick)}
-                        // checked={
-                        //     isChecked.type == typeClick &&
-                        //     isChecked.checked.findIndex((id) => id == item.id) !== -1
-                        //         ? true
-                        //         : false
-                        // }
+                        checked={
+                            (typeClick == "type" ? type : brand).findIndex((id) => id == item.id) !== -1
+                                ? true
+                                : false
+                        }
                     ></input>
                     <label htmlFor={item.name}>{item.name}</label>
                 </li>
@@ -304,9 +314,7 @@ const Sidebar = ({
                 <section className="price">
                     <h2 className="categories-title">Prices</h2>
                     <div className="categories-container">
-                        <ul className="price-list" onClick={(e) => handelRangerPriceClick(e)}>
-                            {renderRangePrice()}
-                        </ul>
+                        <ul className="price-list">{renderRangePrice()}</ul>
                         <div className="price-range">
                             <span>$ </span>
                             <input type="number" />
@@ -320,5 +328,28 @@ const Sidebar = ({
         </aside>
     );
 };
+const mapStateToProps = (state) => {
+    const { type, brand, categories, rate, rangePrice, searchKey } = state.filterReducer;
+    return {
+        type,
+        brand,
+        categories,
+        rate,
+        rangePrice,
+        searchKey,
+    };
+};
+const mapDispatchToProps = (dispatch) => {
+    return {
+        setBrand: (params) => dispatch(setBrand(params)),
+        setType: (params) => dispatch(setType(params)),
+        setRate: (params) => dispatch(setRate(params)),
+        setRangePrice: (params) => dispatch(setRangePrice(params)),
+        setCategories: (params) => dispatch(setCategories(params)),
+        setCurrentPage: (params) => dispatch(setCurrentPage(params)),
+        setSortPrice: (params) => dispatch(setSortPrice(params)),
+        setSearchKey: (params) => dispatch(setSearchKey(params)),
+    };
+};
 
-export default Sidebar;
+export default connect(mapStateToProps, mapDispatchToProps)(Sidebar);

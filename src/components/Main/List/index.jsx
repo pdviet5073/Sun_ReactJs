@@ -1,6 +1,9 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect } from "react";
+import { connect } from "react-redux";
+
 import ProductItem from "./ProductItem";
-import axios from "axios";
+
+import { getProduct, getProductFilter, setSortPrice, setCurrentPage } from "../../../redux/actions";
 
 import "./styles.css";
 
@@ -11,22 +14,18 @@ const List = ({
     brand,
     rangePrice,
     searchKey,
-    setSortPrice,
     sortPrice,
     currentPage,
+    setSortPrice,
     setCurrentPage,
+
+    productList,
+    getProduct,
+    lengthProductFilter,
+    getProductFilter,
 }) => {
-    const apiUrl = process.env.REACT_APP_API_URL;
-    const [lengthProductFilter, setLengthProductFilter] = useState(0);
-    const [productData, setProductData] = useState([]);
-    const lengthProduct = useRef(0);
-
     useEffect(() => {
-        getProductList({});
-    }, []);
-
-    useEffect(() => {
-        getProductList({
+        getProduct({
             page: currentPage,
             limit: 12,
             categories,
@@ -37,75 +36,36 @@ const List = ({
             searchKey,
             sortPrice,
         });
+        window.scrollTo({
+            top: 0,
+            left: 0,
+            behavior: "smooth",
+        });
     }, [currentPage, searchKey, categories, rate, type, brand, rangePrice, sortPrice]);
 
     useEffect(() => {
-        getProductList({
+        getProductFilter({
             categories,
             rate,
             type,
             brand,
             rangePrice,
             searchKey,
-            sortPrice,
         });
-    }, [searchKey, categories, rate, type, brand, rangePrice, sortPrice]);
-
-    const getProductList = async ({
-        page,
-        limit,
-        categories,
-        rate,
-        type,
-        brand,
-        rangePrice,
-        searchKey,
-        sortPrice,
-    }) => {
-        setLengthProductFilter(0);
-        try {
-            const response = await axios({
-                method: "GET",
-                url: `${apiUrl}/products`,
-                params: {
-                    ...(page && { _page: page }),
-                    ...(limit && { _limit: limit }),
-                    ...(categories?.idParentCategories && { parentType: categories.idParentCategories }),
-                    ...(categories?.idChildrenCategories && {
-                        childrenType: categories.idChildrenCategories,
-                    }),
-                    ...(rate && { rate }),
-                    ...(type && { type_like: type }),
-                    ...(brand && { brand_like: brand }),
-                    ...(rangePrice && { price_gte: rangePrice[0], price_lte: rangePrice[1] }),
-                    ...(searchKey && { q: searchKey }),
-                    ...(sortPrice && { _sort: "price", _order: sortPrice }),
-                },
-            });
-            const data = response.data;
-            if (page) setProductData(data);
-            else if (categories || rate || type || brand || rangePrice || searchKey || sortPrice)
-                setLengthProductFilter(data.length);
-            if (!page) lengthProduct.current = data.length;
-        } catch (error) {
-            return error;
-        }
-    };
-
+    }, [categories, rate, type, brand, rangePrice, searchKey]);
     const renderProduct = (data) => {
-        return data.map((item, index) => {
-            return <ProductItem key={`product-${index}`} data={item} />;
+        return data?.map((item, index) => {
+            return <ProductItem key={`product-${index}`} data={item} searchKey={searchKey} />;
         });
     };
 
     const renderPagination = () => {
-        const length = lengthProductFilter || lengthProduct.current;
+        const length = lengthProductFilter;
         const temp = length % 12;
         let amount = Math.floor(length / 12);
-        if (temp) {
-            amount += 1;
-        }
         let temPagination = [];
+
+        if (temp) amount += 1;
         for (let i = 0; i < amount; i++) {
             temPagination[i] = i + 1;
         }
@@ -135,7 +95,7 @@ const List = ({
     const onClickPagination = (value) => {
         switch (value) {
             case "Previous page":
-                if (currentPage === 1) return;
+                if (currentPage === 1) break;
                 else setCurrentPage(currentPage - 1);
                 break;
             case "Next page":
@@ -168,7 +128,7 @@ const List = ({
                     </div>
                 </section>
                 <section className="list-product mt-5 px-4">
-                    <div className="row">{renderProduct(productData)}</div>
+                    <div className="row">{renderProduct(productList)}</div>
                 </section>
                 {lengthProductFilter > 12 && (
                     <section className="pagination">
@@ -180,4 +140,31 @@ const List = ({
     );
 };
 
-export default List;
+const mapStateToProps = (state) => {
+    const { productList, lengthProductFilter } = state.productReducer;
+    const { currentPage, searchKey, categories, rate, type, brand, rangePrice, sortPrice } =
+        state.filterReducer;
+
+    return {
+        productList,
+        lengthProductFilter,
+        currentPage,
+        searchKey,
+        categories,
+        rate,
+        type,
+        brand,
+        rangePrice,
+        sortPrice,
+    };
+};
+const mapDispatchToProps = (dispatch) => {
+    return {
+        getProduct: (params) => dispatch(getProduct(params)),
+        getProductFilter: (params) => dispatch(getProductFilter(params)),
+        setSortPrice: (params) => dispatch(setSortPrice(params)),
+        setCurrentPage: (params) => dispatch(setCurrentPage(params)),
+    };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(List);
